@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 /**
  * Draw GUI - simple drawing program
  * Eric McCreath 2015 GPL
- * Edited by Matthew Aitcihson
+ * Edited by Matthew Aitchison
  */
 public class MyCAD implements Runnable, ActionListener {
 
