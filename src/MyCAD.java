@@ -108,7 +108,7 @@ public class MyCAD implements Runnable, ActionListener {
 		actionarea.add(jbutton);
 		JScrollPane drawpane = new JScrollPane(drawArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		drawpane.setPreferredSize(new Dimension(200, 200));
+		drawpane.setPreferredSize(new Dimension(600, 600));
 		jframe.getContentPane().add(actionarea, BorderLayout.PAGE_START);
 		jframe.getContentPane().add(drawpane, BorderLayout.CENTER);
 		jframe.getContentPane().add(drawtool, BorderLayout.LINE_END);
