@@ -1,10 +1,12 @@
 # CG CAD Assignment Start Repo
 
 This gives you a starting point for the CAD assignment. We mainly wanted to help you with some of the GUI code as it is not the main focus of this assignment,  you are welcome to change or refactor the code as much as you wish. 
+
+Please see the [course website](https://comp.anu.edu.au/courses/comp4610/assessments/assignment1/) for full details on the assignment spec.
  
 Enjoy.
 
-**[Delete the above replace it with a brief summary of your assignment].** 
+**[^^ Delete the above replace it with a brief summary of your assignment].** 
 
 # Statement of originality 
 
