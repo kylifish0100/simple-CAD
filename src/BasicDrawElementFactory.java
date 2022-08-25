@@ -8,12 +8,22 @@ public class BasicDrawElementFactory implements DrawElementFactory {
 
 	public static final String LINETOOL = "LINETOOL";
 	public static final String BOXTOOL = "BOXTOOL";
+	public static final String CIRCLETOOL = "CIRCLETOOL";
+	public static final String TRITOOL = "TRITOOL";
+	public static final String POLYGONTOOL = "POLYGONTOOL";
+	
 	@Override
 	public DrawElement createElementFromMousePress(String toolcommand, Color color, Point pos) {
 		DrawElement drawelement = null;
 		if (toolcommand.equals(LINETOOL)) { 
 			drawelement = new LineElement(pos,pos);
 		} else if (toolcommand.equals(BOXTOOL)) {
+			drawelement = new BoxElement(pos,pos);
+		} else if (toolcommand.equals(CIRCLETOOL)) {
+			drawelement = new CircleElement(pos,pos);
+		} else if (toolcommand.equals(TRITOOL)) {
+			drawelement = new TriElement(pos,pos,pos);
+		} else if (toolcommand.equals(POLYGONTOOL)) {
 			drawelement = new BoxElement(pos,pos);
 		}
 		drawelement = new ColorDrawElement(drawelement,
@@ -41,6 +51,9 @@ public class BasicDrawElementFactory implements DrawElementFactory {
 	public void addButtons(ToolBar drawtool) {
 		drawtool.addButton("Line",LINETOOL);
      	drawtool.addButton("Box",BOXTOOL);
+     	drawtool.addButton("Circle",CIRCLETOOL);
+     	drawtool.addButton("Triangle",TRITOOL);
+     	drawtool.addButton("Polygon",POLYGONTOOL);
 	}
 
 }
