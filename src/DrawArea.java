@@ -72,6 +72,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	public void mouseDragged(MouseEvent me) {
 		if (currentControl != null) {
 			currentControl.element.moveControlPoint(currentControl.control, me.getPoint());
+			System.out.println("mouse drag point"+me.getPoint());
 		}
 		repaint();
 	}
@@ -82,6 +83,14 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
+		String command = (String) drawGUI.drawtool.getSelectCommand();
+		if(command.equals(BasicDrawElementFactory.TRITOOL)){
+			DrawElement drawelement = drawAreaFactory.createElementFromMouseClicked(command,
+					(Color) drawGUI.colortool.getSelectCommand(), me.getPoint());
+			drawGUI.drawing.add(drawelement);
+		    currentControl = new ElementControlPoint(drawelement, 1);
+		    System.out.println(currentControl);
+		}
 	}
 
 	@Override
@@ -98,11 +107,14 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 		if (command.equals(MyCAD.EDITTOOL)) {
 			currentControl = drawGUI.drawing.findControl(me.getPoint());
+			System.out.println(currentControl.control);
 		} else {
 			DrawElement drawelement = drawAreaFactory.createElementFromMousePress(command,
 					(Color) drawGUI.colortool.getSelectCommand(), me.getPoint());
+			System.out.println(me.getPoint());
 			drawGUI.drawing.add(drawelement);
 			currentControl = new ElementControlPoint(drawelement, 1);
+			System.out.println(currentControl.control);
 		}
 		repaint();
 	}

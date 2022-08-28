@@ -26,6 +26,24 @@ public class BasicDrawElementFactory implements DrawElementFactory {
 		} else if (toolcommand.equals(POLYGONTOOL)) {
 			drawelement = new BoxElement(pos,pos);
 		}
+		System.out.println("pos.x"+pos.getX()+"pos.y"+pos.getY());
+		drawelement = new ColorDrawElement(drawelement,
+				color);
+		return drawelement;
+	}
+	public DrawElement createElementFromMouseClicked(String toolcommand, Color color, Point pos){
+		DrawElement drawelement = null;
+		if (toolcommand.equals(LINETOOL)) {
+			drawelement = new LineElement(pos,pos);
+		} else if (toolcommand.equals(BOXTOOL)) {
+			drawelement = new BoxElement(pos,pos);
+		} else if (toolcommand.equals(CIRCLETOOL)) {
+			drawelement = new CircleElement(pos,pos);
+		} else if (toolcommand.equals(TRITOOL)) {
+			drawelement = new TriElement(pos,pos,pos);
+		} else if (toolcommand.equals(POLYGONTOOL)) {
+			drawelement = new BoxElement(pos,pos);
+		}
 		drawelement = new ColorDrawElement(drawelement,
 				color);
 		return drawelement;

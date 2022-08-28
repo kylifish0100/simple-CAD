@@ -31,6 +31,7 @@ public class Drawing extends ArrayList<DrawElement> {
 	public ElementControlPoint findControl(Point point) {
 		for (DrawElement d : this) {
 			ArrayList<Point2D>  cps = d.controlPoints();
+			//System.out.println(cps.size());
 			for (int i = 0;i<cps.size();i++) {  // return the first control point within the limited radius
 				if (cps.get(i).distance(point) < CONTROLPOINTRADIUS) return new ElementControlPoint(d,i);
 			}

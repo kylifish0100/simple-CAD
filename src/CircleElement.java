@@ -35,9 +35,7 @@ public class CircleElement extends DrawElement {
 		int x2 = (int)bottomRight.getX();
 		int y2 = (int)bottomRight.getY();
 		int radius = (int)Math.sqrt((topLeft.getX()-bottomRight.getX())*(topLeft.getX()-bottomRight.getX())+(topLeft.getY()-bottomRight.getY())*(topLeft.getY()-bottomRight.getY()));
-		g.drawOval(x1,y1,radius,radius); 
-		System.out.println(topLeft);
-		System.out.println(bottomRight);
+		g.drawOval(x1,y1,radius,radius);
 	}
 
 	/**
