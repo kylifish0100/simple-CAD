@@ -57,7 +57,11 @@ public class StoreFacade {
 		assert(currentelement != null);
 		currentelement.appendChild(xmlpoint(namea, a, doc));
 	}
-	
+
+//	public void addText( String text, Point2D a) {
+//		assert(currentelement != null);
+//		currentelement.appendChild(xmlpoint(text, a, doc));
+//	}
 	
 	
 

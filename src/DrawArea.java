@@ -20,7 +20,7 @@ import javax.swing.JComponent;
 public class DrawArea extends JComponent implements MouseMotionListener, MouseListener, ToolChangeObserver {
 
 	private static final long serialVersionUID = 1L;
-
+	ArrayList<Point2D> coordinates = new ArrayList<>();
 	MyCAD drawGUI;
 
 	ElementControlPoint currentControl;
@@ -52,7 +52,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		g.setColor(Color.black);
-		drawGUI.drawing.draw(g2);
+		drawGUI.drawing.draw(g2); //what does this do?
 
 		g.setColor(Color.black);
 		String command = (String) drawGUI.drawtool.getSelectCommand();
@@ -70,9 +70,10 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 	@Override
 	public void mouseDragged(MouseEvent me) {
+		String command = (String) drawGUI.drawtool.getSelectCommand();
 		if (currentControl != null) {
 			currentControl.element.moveControlPoint(currentControl.control, me.getPoint());
-			System.out.println("mouse drag point"+me.getPoint());
+			System.out.println("drag point input" + currentControl.control);
 		}
 		repaint();
 	}
@@ -83,14 +84,25 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
+		System.out.println("CLICK true");
 		String command = (String) drawGUI.drawtool.getSelectCommand();
 		if(command.equals(BasicDrawElementFactory.TRITOOL)){
-			DrawElement drawelement = drawAreaFactory.createElementFromMouseClicked(command,
-					(Color) drawGUI.colortool.getSelectCommand(), me.getPoint());
-			drawGUI.drawing.add(drawelement);
-		    currentControl = new ElementControlPoint(drawelement, 1);
-		    System.out.println(currentControl);
+			coordinates.add(me.getPoint());
+			System.out.println(coordinates.size());
+			if(coordinates.size()==3){
+				System.out.println("adding triangle");
+				DrawElement triangle = drawAreaFactory.createElementFromMouseClicked(command,
+						drawGUI.selectedColor, coordinates);
+				drawGUI.drawing.add(triangle);
+			}
+
 		}
+		if (command.equals(BasicDrawElementFactory.LABELTOOL)){
+			System.out.println("Trying to drag label");
+			DrawElement labelbox = drawAreaFactory.createEmptyLabel(drawGUI.selectedColor, me.getPoint());
+			drawGUI.drawing.add(labelbox);
+		}
+		repaint();
 	}
 
 	@Override
@@ -104,14 +116,14 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	@Override
 	public void mousePressed(MouseEvent me) {
 		String command = (String) drawGUI.drawtool.getSelectCommand();
-
+		System.out.println("press true");
 		if (command.equals(MyCAD.EDITTOOL)) {
 			currentControl = drawGUI.drawing.findControl(me.getPoint());
 			System.out.println(currentControl.control);
-		} else {
+		} else if (command.equals(BasicDrawElementFactory.BOXTOOL)||command.equals(BasicDrawElementFactory.CIRCLETOOL)
+				||command.equals(BasicDrawElementFactory.LINETOOL)) {
 			DrawElement drawelement = drawAreaFactory.createElementFromMousePress(command,
-					(Color) drawGUI.colortool.getSelectCommand(), me.getPoint());
-			System.out.println(me.getPoint());
+					drawGUI.selectedColor, me.getPoint());
 			drawGUI.drawing.add(drawelement);
 			currentControl = new ElementControlPoint(drawelement, 1);
 			System.out.println(currentControl.control);

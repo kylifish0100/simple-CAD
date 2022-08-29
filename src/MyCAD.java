@@ -5,18 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Draw GUI - simple drawing program
@@ -31,12 +20,17 @@ public class MyCAD implements Runnable, ActionListener {
 	private static final String CLEARCOMMAND = "clearcommand";
 	private static final String SAVECOMMAND = "savecommand";
 	private static final String OPENCOMMAND = "opencommand";
+	private static final String INPUT = "labelinput";
+	private static final String CHOOSECOLOR = "choosecolor";
+	private static final String FILLERTOOL = "fillertool";
 	JFrame jframe;
 	DrawArea drawArea;
 	DrawElementFactory drawElementFactory;
 	JSlider scaleSlider;
 	Drawing drawing;
-	ToolBar drawtool, colortool;
+	ToolBar drawtool;
+	ColorChooser ccButton;
+	Color selectedColor;
 
 	JFileChooser filechooser = new JFileChooser();
 
@@ -97,22 +91,40 @@ public class MyCAD implements Runnable, ActionListener {
 		});
 		scaleSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
 
-		colortool = new ToolBar(BoxLayout.Y_AXIS);
-		colortool.addButton("BLACK", Color.black);
-		colortool.addButton("RED", Color.red);
-		colortool.addButton("BLUE", Color.blue);
+//		colortool = new ToolBar(BoxLayout.Y_AXIS);
+//		colortool.addButton("BLACK", Color.black);
+//		colortool.addButton("RED", Color.red);
+//		colortool.addButton("BLUE", Color.blue);
+
+		ccButton = new ColorChooser(Color.BLACK, "Choose A Color");
+		ccButton.setActionCommand(CHOOSECOLOR);
+		ccButton.addActionListener(this);
+		actionarea.add(ccButton);
+
+		JButton fillerbutton = new JButton("Filler");
+		fillerbutton.setActionCommand(FILLERTOOL);
+		fillerbutton.addActionListener(this);
+		actionarea.add(fillerbutton);
 
 		JButton jbutton = new JButton("Clear");
 		jbutton.setActionCommand(CLEARCOMMAND);
 		jbutton.addActionListener(this);
+		actionarea.add(Box.createHorizontalGlue());
 		actionarea.add(jbutton);
+
+
+		JButton label_input = new JButton("Label input");
+		label_input.setActionCommand(INPUT);
+		label_input.addActionListener(this);
+		actionarea.add(label_input);
+
 		JScrollPane drawpane = new JScrollPane(drawArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		drawpane.setPreferredSize(new Dimension(600, 600));
 		jframe.getContentPane().add(actionarea, BorderLayout.PAGE_START);
 		jframe.getContentPane().add(drawpane, BorderLayout.CENTER);
 		jframe.getContentPane().add(drawtool, BorderLayout.LINE_END);
-		jframe.getContentPane().add(colortool, BorderLayout.LINE_START);
+//		jframe.getContentPane().add(colortool, BorderLayout.LINE_START);
 		jframe.getContentPane().add(scaleSlider, BorderLayout.PAGE_END);
 		jframe.setMinimumSize(new Dimension(100, 100));
 		jframe.setVisible(true);
@@ -150,7 +162,15 @@ public class MyCAD implements Runnable, ActionListener {
 				drawing = Drawing.load(filechooser.getSelectedFile(), drawElementFactory);
 				drawArea.repaint();
 			}
+		}else if (ae.getActionCommand().equals(INPUT)) {
+			InputWindow labelInput = new InputWindow();
+			labelInput.changeVisible();
+		}else if(ae.getActionCommand().equals(CHOOSECOLOR)){
+			Color newColor = JColorChooser.showDialog(null, "Choose a color", ccButton.getCurrent());
+			ccButton.getSelectedColor(newColor);
+			selectedColor = newColor;
 		}
+
 	}
 
 }

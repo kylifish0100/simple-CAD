@@ -13,17 +13,16 @@ import java.util.ArrayList;
  */
 public class TriElement extends DrawElement {
 
-	Point2D topLeft, bottomLeft, bottomRight;
+	Point2D vertexA, vertexB, vertexC;
 
 	/**
-	 * Construct a box element.
-	 * @param topLeft top left point
-	 * @param bottomRight bottom right point
+	 * Construct a triangle.
+	 * @param vertexA, vertexB and vertexC represents three vertices of a triangle.
 	 */
-	public TriElement(Point2D topLeft, Point2D bottomLeft, Point2D bottomRight) {
-		this.topLeft = topLeft;
-		this.bottomLeft = bottomLeft;
-		this.bottomRight = bottomRight;
+	public TriElement(ArrayList<Point2D> coordinates) {
+		this.vertexA = coordinates.get(0);
+		this.vertexB = coordinates.get(1);
+		this.vertexC = coordinates.get(2);
 	}
 
 	/**
@@ -32,17 +31,16 @@ public class TriElement extends DrawElement {
 	 */
 	public void draw(Graphics2D g)
 	{
-//		double x1 = topLeft.getX();
-//		double y1 = topLeft.getY();
-//		double x2 = bottomLeft.getX();
-//		double y2 = bottomLeft.getY();
-//		double x3 = bottomRight.getX();
-//		double y3 = bottomRight.getY();
-		g.draw(new Line2D.Double(topLeft,bottomLeft));
-		g.draw(new Line2D.Double(topLeft,bottomRight));
-		g.draw(new Line2D.Double(bottomLeft,bottomRight));
-
-//		g.drawPolygon(new int[] {x1, x2, x3}, new int[] {y1, y2, y3}, 3);
+		int x0 = (int)vertexA.getX();
+		int y0 = (int)vertexA.getY();
+		int x1 = (int)vertexB.getX();
+		int y1 = (int)vertexB.getY();
+		int x2 = (int)vertexC.getX();
+		int y2 = (int)vertexC.getY();
+//		g.draw(new Line2D.Double(topLeft,bottomLeft));
+//		g.draw(new Line2D.Double(topLeft,bottomRight));
+//		g.draw(new Line2D.Double(bottomLeft,bottomRight));
+		g.drawPolygon(new int[] {x0, x1, x2}, new int[] {y0, y1, y2}, 3);
 	}
 
 	/**
@@ -51,11 +49,11 @@ public class TriElement extends DrawElement {
 	 */
 	public ArrayList<Point2D> controlPoints() {
 		ArrayList<Point2D> controlpoints = new ArrayList<Point2D>();
-		controlpoints.add(topLeft);
-		controlpoints.add(bottomRight);
-		controlpoints.add(new Point2D.Double(topLeft.getX(), bottomRight.getY()));
-		controlpoints.add(new Point2D.Double(bottomRight.getX(), topLeft.getY()));
-		controlpoints.add(PUtil.mid(topLeft, bottomRight));
+		controlpoints.add(vertexA);
+		controlpoints.add(vertexB);
+		controlpoints.add(vertexC);
+		controlpoints.add(new Point2D.Double((vertexA.getX() + vertexB.getX()+vertexC.getX())/3.0,
+				(vertexA.getY() + vertexB.getY()+vertexC.getY())/3.0));
 		return controlpoints;
 	}
 
@@ -65,24 +63,28 @@ public class TriElement extends DrawElement {
 	 * @param pos new position.
 	 */
 	public void moveControlPoint(int control, Point2D pos) {
-		if (control == 0)  // topleft
-			topLeft = pos;
-		else if (control == 1) // bottomleft
-			bottomRight = pos;
-		else if (control == 2) { // bottomright
-			bottomRight = pos;
+		if (control == 0)  // top vertex
+			vertexA = pos;
+		else if (control == 1) // bottom left vertex
+			vertexB = pos;
+		else if (control == 2) { // bottom right vertex
+			vertexC = pos;
 		} 
 	}
 
 	@Override
 	public void storeElement(StoreFacade sf) {
-		sf.start("TriElement");
-		sf.addPoint("topleft", topLeft);
-		sf.addPoint("bottomleft", bottomLeft);
-		sf.addPoint("bottomright", bottomRight);
+		sf.start("TriangleElement");
+		sf.addPoint("top", vertexA);
+		sf.addPoint("bottomleft", vertexB);
+		sf.addPoint("bottomright", vertexC);
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {
-		return new TriElement(lf.getPoint("topleft"), lf.getPoint("bottomleft"), lf.getPoint("bottomright"));
+		ArrayList<Point2D> triangleVertices = new ArrayList<>();
+		triangleVertices.add(lf.getPoint("top"));
+		triangleVertices.add(lf.getPoint("bottomleft"));
+		triangleVertices.add(lf.getPoint("bottomright"));
+		return new TriElement(triangleVertices);
 	}
 }
