@@ -10,11 +10,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
-
+/** This is a class for ColorChooser button that automatically shows the selected color.
+ *  Color chooser is from JColorChooser.
+ *  And the changeable color icon in button implementation references to-
+ *  https://stackoverflow.com/questions/26565166/how-to-display-a-color-selector-when-clicking-a-button
+ */
 public class ColorChooser extends JButton {
-
         private Color current;
         private String name;
+        //MyCAD GUIObj;
 
         public ColorChooser(Color c, String name) {
             setText(name);
@@ -22,7 +26,9 @@ public class ColorChooser extends JButton {
             addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
+                    //Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.BLACK);
                     setSelectedColor(current);
+                    //GUIObj.setSelectedColor(newColor);
                 }
             });
         }

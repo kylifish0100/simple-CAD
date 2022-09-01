@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * CircleElement - represents a circle defined by two points, i.e. the distance of two points defines diameter of the circle
+ * CircleElement - represents a oval defined by 2 radius
  * 
  * @author Eric McCreath
  * edited by Yuhan Zhang
@@ -34,8 +34,16 @@ public class CircleElement extends DrawElement {
 		int y1 = (int)topLeft.getY();
 		int x2 = (int)bottomRight.getX();
 		int y2 = (int)bottomRight.getY();
-		int radius = (int)Math.sqrt((topLeft.getX()-bottomRight.getX())*(topLeft.getX()-bottomRight.getX())+(topLeft.getY()-bottomRight.getY())*(topLeft.getY()-bottomRight.getY()));
-		g.drawOval(x1,y1,radius,radius);
+		g.drawOval(x1,y1,Math.abs(x1-x2),Math.abs(y1-y2));
+	}
+
+	@Override
+	public void Fill(Graphics2D g) {
+		int x1 = (int)topLeft.getX();
+		int y1 = (int)topLeft.getY();
+		int x2 = (int)bottomRight.getX();
+		int y2 = (int)bottomRight.getY();
+		g.fillOval(x1,y1,Math.abs(x1-x2),Math.abs(y1-y2));
 	}
 
 	/**
@@ -80,6 +88,11 @@ public class CircleElement extends DrawElement {
 		sf.start("CircleElement");
 		sf.addPoint("topleft", topLeft);
 		sf.addPoint("bottomright", bottomRight);
+	}
+
+	@Override
+	public void addLabelText(String text) {
+
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class BoxElement extends DrawElement {
 
 	Point2D topLeft, bottomRight;
+	Double width, height;
 
 	/**
 	 * Construct a box element.
@@ -22,6 +23,8 @@ public class BoxElement extends DrawElement {
 	public BoxElement(Point2D topLeft, Point2D bottomRight) {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;
+		width = Math.abs(topLeft.getX()-bottomRight.getX());
+		height = Math.abs(topLeft.getY()-bottomRight.getY());
 	}
 
 	/**
@@ -34,6 +37,11 @@ public class BoxElement extends DrawElement {
 		g.draw(new Line2D.Double(new Point2D.Double(bottomRight.getX(), topLeft.getY()), bottomRight));
 		g.draw(new Line2D.Double(bottomRight, new Point2D.Double(topLeft.getX(), bottomRight.getY())));
 		g.draw(new Line2D.Double(new Point2D.Double(topLeft.getX(), bottomRight.getY()), topLeft));
+	}
+
+	@Override
+	public void Fill(Graphics2D g) {
+		g.fillRect((int) topLeft.getX(), (int) topLeft.getY(), (int) Math.round(width), (int) Math.round(height));
 	}
 
 	/**
@@ -78,6 +86,11 @@ public class BoxElement extends DrawElement {
 		sf.start("BoxElement");
 		sf.addPoint("topleft", topLeft);
 		sf.addPoint("bottomright", bottomRight);
+	}
+
+	@Override
+	public void addLabelText(String text) {
+
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

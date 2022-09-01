@@ -23,6 +23,7 @@ public class MyCAD implements Runnable, ActionListener {
 	private static final String INPUT = "labelinput";
 	private static final String CHOOSECOLOR = "choosecolor";
 	private static final String FILLERTOOL = "fillertool";
+	private String textStored;
 	JFrame jframe;
 	DrawArea drawArea;
 	DrawElementFactory drawElementFactory;
@@ -150,6 +151,7 @@ public class MyCAD implements Runnable, ActionListener {
 		if (ae.getActionCommand().equals(CLEARCOMMAND)) {
 			System.out.println("clear");
 			drawing.clearDrawing();
+			drawArea.ClearAll();
 			drawArea.repaint();
 		} else if (ae.getActionCommand().equals(EXITCOMMAND)) {
 			System.exit(0);
@@ -163,14 +165,23 @@ public class MyCAD implements Runnable, ActionListener {
 				drawArea.repaint();
 			}
 		}else if (ae.getActionCommand().equals(INPUT)) {
-			InputWindow labelInput = new InputWindow();
+			InputWindow labelInput = new InputWindow(this);
 			labelInput.changeVisible();
-		}else if(ae.getActionCommand().equals(CHOOSECOLOR)){
-			Color newColor = JColorChooser.showDialog(null, "Choose a color", ccButton.getCurrent());
+		} else if(ae.getActionCommand().equals(CHOOSECOLOR)){
+			Color newColor = JColorChooser.showDialog(null, "Choose a color", ccButton.getCurrent() );
 			ccButton.getSelectedColor(newColor);
 			selectedColor = newColor;
+
 		}
 
+	}
+	public void getInputText(String text){
+		this.textStored=text;
+		System.out.println(textStored);
+	}
+
+	public String getTextStored(){
+		return this.textStored;
 	}
 
 }

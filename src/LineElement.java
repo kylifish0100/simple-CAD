@@ -23,6 +23,11 @@ public class LineElement extends DrawElement {
 		g.draw(new Line2D.Float(start, end));
 	}
 
+	@Override
+	public void Fill(Graphics2D g) {
+
+	}
+
 	// controlPoints - there is just: start, end, mid
 	public ArrayList<Point2D> controlPoints() {
 		ArrayList<Point2D> controlpoints = new ArrayList<Point2D>();
@@ -57,6 +62,11 @@ public class LineElement extends DrawElement {
 		sf.start("LineElement");
 		sf.addPoint("start", start);
 		sf.addPoint("end", end);
+	}
+
+	@Override
+	public void addLabelText(String text) {
+
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

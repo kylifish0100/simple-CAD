@@ -31,11 +31,24 @@ public class ColorDrawElement extends DrawElementDecorator {
 	}
 
 	@Override
+	public void Fill(Graphics2D g) {
+		Color oldcolor = g.getColor();
+		g.setColor(color);
+		drawElement.Fill(g);
+		g.setColor(oldcolor);
+	}
+
+	@Override
 	public void storeElement(StoreFacade sf) {
 		drawElement.storeElement(sf);
 		sf.addInteger("color",color.getRGB());
 	}
-	
+
+	@Override
+	public void addLabelText(String text) {
+
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ColorDrawElement) {

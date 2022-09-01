@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class LabelElement extends DrawElement{
 
-    JLabel label;
     String text;
     Point2D topLeft, bottomRight;
     MyCAD drawGUI;
@@ -15,16 +14,8 @@ public class LabelElement extends DrawElement{
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
-    public LabelElement(JLabel label, String text, Point2D topLeft, Point2D bottomRight){
-        this.label = label;
-        label.setText(text);
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
-    }
-
-    public void getInputText(String text){
+    public LabelElement(String text){
         this.text = text;
-        System.out.println(text);
     }
 
 
@@ -34,6 +25,11 @@ public class LabelElement extends DrawElement{
         g.draw(new Line2D.Double(new Point2D.Double(bottomRight.getX(), topLeft.getY()), bottomRight));
         g.draw(new Line2D.Double(bottomRight, new Point2D.Double(topLeft.getX(), bottomRight.getY())));
         g.draw(new Line2D.Double(new Point2D.Double(topLeft.getX(), bottomRight.getY()), topLeft));
+    }
+
+    @Override
+    public void Fill(Graphics2D g) {
+
     }
 
     @Override
@@ -71,6 +67,16 @@ public class LabelElement extends DrawElement{
         sf.addPoint("topleft", topLeft);
         sf.addPoint("bottomright", bottomRight);
         //sf.addText(text);
+    }
+
+    @Override
+    public void addLabelText(String text) {
+        this.text = text;
+        System.out.println(text);
+    }
+
+    public String getLabelText(String text) {
+        return this.text;
     }
 
     public static DrawElement loadElement(LoadFacade lf) {

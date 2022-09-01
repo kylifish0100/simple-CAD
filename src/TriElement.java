@@ -37,10 +37,18 @@ public class TriElement extends DrawElement {
 		int y1 = (int)vertexB.getY();
 		int x2 = (int)vertexC.getX();
 		int y2 = (int)vertexC.getY();
-//		g.draw(new Line2D.Double(topLeft,bottomLeft));
-//		g.draw(new Line2D.Double(topLeft,bottomRight));
-//		g.draw(new Line2D.Double(bottomLeft,bottomRight));
 		g.drawPolygon(new int[] {x0, x1, x2}, new int[] {y0, y1, y2}, 3);
+	}
+
+	@Override
+	public void Fill(Graphics2D g) {
+		int x0 = (int)vertexA.getX();
+		int y0 = (int)vertexA.getY();
+		int x1 = (int)vertexB.getX();
+		int y1 = (int)vertexB.getY();
+		int x2 = (int)vertexC.getX();
+		int y2 = (int)vertexC.getY();
+		g.fillPolygon(new int[] {x0, x1, x2}, new int[] {y0, y1, y2}, 3);
 	}
 
 	/**
@@ -78,6 +86,11 @@ public class TriElement extends DrawElement {
 		sf.addPoint("top", vertexA);
 		sf.addPoint("bottomleft", vertexB);
 		sf.addPoint("bottomright", vertexC);
+	}
+
+	@Override
+	public void addLabelText(String text) {
+
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

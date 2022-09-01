@@ -16,7 +16,7 @@ public abstract class DrawElementDecorator extends DrawElement {
 	public void draw(Graphics2D g) {  // often this would get overwritten 
 		drawElement.draw(g);
 	}
-
+	public void Fill(Graphics2D g) { drawElement.Fill(g); }
 	@Override
 	public ArrayList<Point2D> controlPoints() {
 		return drawElement.controlPoints();    // this can just pass through

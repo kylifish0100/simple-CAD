@@ -14,6 +14,7 @@ public abstract class DrawElement
       * Draw element to Graphics2D context.
       */
      abstract public void draw(Graphics2D g);
+     abstract public void Fill(Graphics2D g);
 
      abstract public ArrayList<Point2D> controlPoints();
 
@@ -28,4 +29,5 @@ public abstract class DrawElement
       * Save element.
       */
      abstract public void storeElement(StoreFacade sf);
+     abstract public void addLabelText(String text);
 }

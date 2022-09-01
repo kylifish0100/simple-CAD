@@ -36,8 +36,9 @@ public class BasicDrawElementFactory implements DrawElementFactory {
 		if(toolcommand.equals(TRITOOL)){
 			drawelement = new TriElement(coordinates);
 		} else if (toolcommand.equals(POLYGONTOOL)) {
-			drawelement = new TriElement(coordinates);
+			drawelement = new PolygonElement(coordinates);
 		}
+
 		drawelement = new ColorDrawElement(drawelement,
 				color);
 		return drawelement;
