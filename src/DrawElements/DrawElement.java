@@ -1,9 +1,13 @@
+package DrawElements;
+
+import Facade.*;
+
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * DrawElement - all elements that make up the drawing will extend this abstract class. 
+ * DrawElements.DrawElement - all elements that make up the drawing will extend this abstract class.
  * @author Eric McCreath
  * Edited by Matthew Aitchison
  */

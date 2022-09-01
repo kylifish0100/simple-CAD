@@ -1,8 +1,10 @@
+import DrawElements.DrawElement;
+import transformation.CopyPaste;
+import transformation.ZoomTransform;
+
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Ellipse2D;
+import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -14,17 +16,19 @@ import javax.swing.*;
  * Edited by Matthew Aitchison
  */
 
-public class DrawArea extends JComponent implements MouseMotionListener, MouseListener, ToolChangeObserver {
+public class DrawArea extends JComponent implements MouseMotionListener, MouseListener, MouseWheelListener, ToolChangeObserver {
 
 	private static final long serialVersionUID = 1L;
 	ArrayList<Point2D> coordinates = new ArrayList<>();
 	MyCAD drawGUI;
-	//EditTool editTool;
-
 	ElementControlPoint currentControl;
 	DrawElementFactory drawAreaFactory;
 	ArrayList<DrawElement> sElementList = new ArrayList<>();
-	ArrayList<DrawElement> tBFElement = new ArrayList<>();
+	ArrayList<Point2D> PtsInDrawing = new ArrayList<>();
+	Point2D zoomOrigin;
+	private double zoom = 2.0;
+	private CopyPaste cp = null;
+	private DrawElement copyElement = null;
 
 
 	/**
@@ -39,6 +43,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		this.setPreferredSize(new Dimension(700, 500));
 		this.addMouseMotionListener(this);
 		this.addMouseListener(this);
+		this.addMouseWheelListener(this);
 		drawGUI.drawtool.addChangeObserver(this);
 	}
 
@@ -49,19 +54,34 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		String command = (String) drawGUI.drawtool.getSelectCommand();
+
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		AffineTransform saveTr = g2.getTransform();
+
+		if(zoomOrigin!=null&&command.equals("Zoom")){
+			ZoomTransform zoom = new ZoomTransform(g,this.zoom,zoomOrigin);
+		}
 
 		g.setColor(Color.black);
 		drawGUI.drawing.draw(g2);
-		drawGUI.drawing.fill(tBFElement,g2);
+		drawGUI.elementToFill.fill(g2);
 
-		String command = (String) drawGUI.drawtool.getSelectCommand();
+		if(cp!=null && copyElement!=null){
+			cp.DrawPasted(g,copyElement);
+		}
 
-//		editTool = new EditTool(g2);
-//		System.out.println(editTool);
+		if (command.equals("CURVETOOL")||command.equals("TRITOOL")||command.equals("POLYGONTOOL")){
+			EditTool editTool = new EditTool(g2);
+			editTool.MarkPtsWhileDraw(coordinates);
+		}
 
 		//draw the control points if in edit mode
+		if (command.equals(BasicDrawElementFactory.FILLTOOL)) {
+			EditTool editTool = new EditTool(g2);
+			editTool.MarkPointsForFill(drawGUI);
+		}
 		if (command.equals(MyCAD.EDITTOOL)) {
 			String labelText = new String();
 			EditTool editTool = new EditTool(g2);
@@ -75,7 +95,6 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 			}
 			for(DrawElement de : sElementList){
 				de.addLabelText(labelText);
-				System.out.println(de.controlPoints().get(0).getX());
 				if(labelText!=null) {
 					Font labelFont = new Font("Lucida", Font.PLAIN, 10);
 					FontMetrics metrics = g.getFontMetrics(labelFont);
@@ -84,7 +103,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 				}
 			}
 		}
-//			for (DrawElement de : drawGUI.drawing) {
+//			for (DrawElements.DrawElement de : drawGUI.drawing) {
 //				ArrayList<Point2D> pts = de.controlPoints();
 //				for (Point2D p : pts) {
 //					g2.draw(new Ellipse2D.Double(p.getX() - 2.0, p.getY() - 2.0, 4.0, 4.0));
@@ -93,15 +112,13 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	}
 	public void ClearAll(){
 		sElementList = new ArrayList<>();
-		tBFElement = new ArrayList<>();
-		System.out.println(sElementList);
+		zoom = 2.0;
 	}
 	@Override
 	public void mouseDragged(MouseEvent me) {
 		String command = (String) drawGUI.drawtool.getSelectCommand();
 		if (currentControl != null) {
 			currentControl.element.moveControlPoint(currentControl.control, me.getPoint());
-			System.out.println("drag point input" + currentControl.element.toString());
 		}
 		repaint();
 	}
@@ -113,19 +130,28 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	@Override
 	public void mouseClicked(MouseEvent me) {
 		String command = (String) drawGUI.drawtool.getSelectCommand();
-		if(SwingUtilities.isRightMouseButton(me)){
-			tBFElement = new ArrayList<>();
-			DrawElement selectedElement = drawGUI.drawing.findElement(me.getPoint());
-			System.out.println("selectedElement "+selectedElement);
-			PopUpMenu menu = new PopUpMenu(e -> {
-				if (e.getActionCommand().equals("fillcolor")  && selectedElement!=null ) {
-					tBFElement.add(selectedElement);
-					System.out.println(tBFElement);
-					repaint();
-				}
-			});
-			menu.show(drawGUI.jframe, me.getX(), me.getY());
+		if(command.equals("Zoom")){
+			zoomOrigin = (Point2D) me.getPoint();
 		}
+
+		if(command.equals(BasicDrawElementFactory.FILLTOOL)){
+			if(SwingUtilities.isRightMouseButton(me)){
+				DrawElement selectedElement = drawGUI.drawing.findElement(me.getPoint());
+				System.out.println("selectedElement " + selectedElement);
+				PopUpMenu menu = new PopUpMenu(e -> {
+					System.out.println(e.getActionCommand());
+					if (e.getActionCommand().equals("fillcolor")  && selectedElement!=null ) {
+						System.out.println("filling");
+						DrawElement coloredEle = drawAreaFactory.fillElementWithColor(drawGUI.selectedColor,selectedElement);
+						drawGUI.elementToFill.add(coloredEle);
+						repaint();
+					}
+				});
+				menu.show(drawGUI.jframe, me.getX(), me.getY());
+			}
+		}
+
+
 		if (command.equals(MyCAD.EDITTOOL)){
 			if(SwingUtilities.isLeftMouseButton(me)) {
 				DrawElement selectedElement = drawGUI.drawing.findElement(me.getPoint());
@@ -152,7 +178,6 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 				coordinates.add(me.getPoint());
 				System.out.println("Left click add a point");
 			}
-			System.out.println(coordinates);
 			if(SwingUtilities.isRightMouseButton(me)){
 				PopUpMenu menu = new PopUpMenu(e -> {
 					if (e.getActionCommand().equals("OK")) {
@@ -172,12 +197,21 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		if(command.equals(BasicDrawElementFactory.TRITOOL)){
 
 			coordinates.add(me.getPoint());
-			System.out.println(coordinates);
 			if(coordinates.size()==3){
-				System.out.println("adding triangle");
 				DrawElement triangle = drawAreaFactory.createElementFromMouseClicked(command,
 						drawGUI.selectedColor, coordinates);
 				drawGUI.drawing.add(triangle);
+				coordinates = new ArrayList<>();
+			}
+
+		}
+
+		if(command.equals(BasicDrawElementFactory.CURVETOOL)){
+			coordinates.add(me.getPoint());
+			if(coordinates.size()==4){
+				DrawElement curve = drawAreaFactory.createElementFromMouseClicked(command,
+						drawGUI.selectedColor, coordinates);
+				drawGUI.drawing.add(curve);
 				coordinates = new ArrayList<>();
 			}
 
@@ -187,6 +221,30 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 			DrawElement labelbox = drawAreaFactory.createEmptyLabel(drawGUI.selectedColor, me.getPoint());
 			drawGUI.drawing.add(labelbox);
 		}
+
+//		if (SwingUtilities.isRightMouseButton(me)) {
+//			PopUpMenu menu = new PopUpMenu(e -> {
+//				System.out.println(e.getActionCommand());
+//				if (e.getActionCommand().equals("copy") && copyElement == null) {
+//					copyElement = drawGUI.drawing.findElement(me.getPoint());
+//					System.out.println("New copy:" + copyElement);
+//					cp = new CopyPaste(me.getPoint());
+//				}
+//				if (copyElement != null)
+//					System.out.println("copy:" + copyElement);
+//			});
+//			menu.show(drawGUI.jframe, me.getX(), me.getY());
+//		}
+//
+//		if (SwingUtilities.isRightMouseButton(me)) {
+//			PopUpMenu menu = new PopUpMenu(e -> {
+//				if (e.getActionCommand().equals("paste") && copyElement != null) {
+//					System.out.println("paste:" + copyElement);
+//					cp.GetAfterLoc(me.getPoint());
+//				}
+//			});
+//			menu.show(drawGUI.jframe, me.getX(), me.getY());
+//		}
 
 		repaint();
 	}
@@ -202,15 +260,16 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	@Override
 	public void mousePressed(MouseEvent me) {
 		String command = (String) drawGUI.drawtool.getSelectCommand();
-		System.out.println("press true");
-		if (command.equals(MyCAD.EDITTOOL)) {
-			currentControl = drawGUI.drawing.findControl(me.getPoint());
-		} else if (command.equals(BasicDrawElementFactory.BOXTOOL)||command.equals(BasicDrawElementFactory.CIRCLETOOL)
-				||command.equals(BasicDrawElementFactory.LINETOOL)) {
-			DrawElement drawelement = drawAreaFactory.createElementFromMousePress(command,
-					drawGUI.selectedColor, me.getPoint());
-			drawGUI.drawing.add(drawelement);
-			currentControl = new ElementControlPoint(drawelement, 1);
+		if(SwingUtilities.isLeftMouseButton(me)) {
+			if (command.equals(MyCAD.EDITTOOL)) {
+				currentControl = drawGUI.drawing.findControl(me.getPoint());
+			} else if (command.equals(BasicDrawElementFactory.BOXTOOL) || command.equals(BasicDrawElementFactory.CIRCLETOOL)
+					|| command.equals(BasicDrawElementFactory.LINETOOL)) {
+				DrawElement drawelement = drawAreaFactory.createElementFromMousePress(command,
+						drawGUI.selectedColor, me.getPoint());
+				drawGUI.drawing.add(drawelement);
+				currentControl = new ElementControlPoint(drawelement, 1);
+			}
 		}
 		repaint();
 	}
@@ -224,4 +283,23 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	public void update() {
 		repaint();
 	}
+
+	/** Implement zoom function
+	 *  Adapted from https://stackoverflow.com/questions/30792089/java-graphics2d-translate-and-scale
+	 * @param e the event to be processed
+	 */
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(e.getPreciseWheelRotation()<0){
+			zoom -= 0.05;
+		} else {
+			zoom += 0.05;
+		}
+		if(zoom<0.01){
+			zoom = 0.01;
+		}
+		repaint();
+	}
+
+
 }

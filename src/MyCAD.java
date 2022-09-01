@@ -22,13 +22,13 @@ public class MyCAD implements Runnable, ActionListener {
 	private static final String OPENCOMMAND = "opencommand";
 	private static final String INPUT = "labelinput";
 	private static final String CHOOSECOLOR = "choosecolor";
-	private static final String FILLERTOOL = "fillertool";
+
 	private String textStored;
 	JFrame jframe;
 	DrawArea drawArea;
 	DrawElementFactory drawElementFactory;
 	JSlider scaleSlider;
-	Drawing drawing;
+	Drawing drawing,elementToFill;
 	ToolBar drawtool;
 	ColorChooser ccButton;
 	Color selectedColor;
@@ -53,6 +53,7 @@ public class MyCAD implements Runnable, ActionListener {
 		drawElementFactory = new BasicDrawElementFactory();
 
 		drawing = new Drawing(drawElementFactory);
+		elementToFill = new Drawing(drawElementFactory);
 
 		// set up the menu bar
 		JMenuBar bar = new JMenuBar();
@@ -102,10 +103,6 @@ public class MyCAD implements Runnable, ActionListener {
 		ccButton.addActionListener(this);
 		actionarea.add(ccButton);
 
-		JButton fillerbutton = new JButton("Filler");
-		fillerbutton.setActionCommand(FILLERTOOL);
-		fillerbutton.addActionListener(this);
-		actionarea.add(fillerbutton);
 
 		JButton jbutton = new JButton("Clear");
 		jbutton.setActionCommand(CLEARCOMMAND);
@@ -151,6 +148,7 @@ public class MyCAD implements Runnable, ActionListener {
 		if (ae.getActionCommand().equals(CLEARCOMMAND)) {
 			System.out.println("clear");
 			drawing.clearDrawing();
+			elementToFill.clearDrawing();
 			drawArea.ClearAll();
 			drawArea.repaint();
 		} else if (ae.getActionCommand().equals(EXITCOMMAND)) {
@@ -164,14 +162,13 @@ public class MyCAD implements Runnable, ActionListener {
 				drawing = Drawing.load(filechooser.getSelectedFile(), drawElementFactory);
 				drawArea.repaint();
 			}
-		}else if (ae.getActionCommand().equals(INPUT)) {
+		} else if (ae.getActionCommand().equals(INPUT)) {
 			InputWindow labelInput = new InputWindow(this);
 			labelInput.changeVisible();
 		} else if(ae.getActionCommand().equals(CHOOSECOLOR)){
 			Color newColor = JColorChooser.showDialog(null, "Choose a color", ccButton.getCurrent() );
 			ccButton.getSelectedColor(newColor);
 			selectedColor = newColor;
-
 		}
 
 	}

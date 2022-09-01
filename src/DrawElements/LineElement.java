@@ -1,17 +1,21 @@
+package DrawElements;
+
+import Facade.*;
+
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * LineElement - represents a simple line with a start and end point.
+ * DrawElements.LineElement - represents a simple line with a start and end point.
  * 
  * @author Eric McCreath
  *
  */
 public class LineElement extends DrawElement {
 
-	private static final String LINE_ELEMENT = "LineElement";
+	private static final String LINE_ELEMENT = "DrawElements.LineElement";
 	Point2D start, end;
 
 	public LineElement(Point2D s, Point2D e) {
@@ -59,7 +63,7 @@ public class LineElement extends DrawElement {
 
 	@Override
 	public void storeElement(StoreFacade sf) {
-		sf.start("LineElement");
+		sf.start("DrawElements.LineElement");
 		sf.addPoint("start", start);
 		sf.addPoint("end", end);
 	}

@@ -1,16 +1,18 @@
+package DrawElements;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import Facade.*;
 
-public class PolygonElement extends DrawElement{
+public class PolygonElement extends DrawElement {
     Integer verticesCount;
     Polygon p;
-    Point2D vertexA, vertexB, vertexC;
+
     ArrayList<Point2D> coordinates;
 
     /**
      * Construct a Polygons with up to 50 sides.
-     * @param vertexA, vertexB and vertexC represents three vertices of a Polygon.
      */
     public PolygonElement(ArrayList<Point2D> coordinates) {
         this.verticesCount = coordinates.size();
@@ -19,11 +21,6 @@ public class PolygonElement extends DrawElement{
         for (Point2D pt : coordinates){
             p.addPoint((int)pt.getX(),(int)pt.getY());
         }
-        Integer index_a = verticesCount*1/3;
-        Integer index_b = verticesCount*2/3;
-        this.vertexA = coordinates.get(index_a);
-        this.vertexB = coordinates.get(index_b);
-        this.vertexC = coordinates.get(verticesCount-1);
     }
 
     /**
@@ -53,12 +50,7 @@ public class PolygonElement extends DrawElement{
      * @return array of four control points.
      */
     public ArrayList<Point2D> controlPoints() {
-        ArrayList<Point2D> controlpoints = new ArrayList<Point2D>();
-        controlpoints.add(vertexA);
-        controlpoints.add(vertexB);
-        controlpoints.add(vertexC);
-        controlpoints.add(new Point2D.Double((vertexA.getX() + vertexB.getX()+vertexC.getX())/3.0,
-                (vertexA.getY() + vertexB.getY()+vertexC.getY())/3.0));
+        ArrayList<Point2D> controlpoints = coordinates;
         return controlpoints;
     }
 
@@ -68,21 +60,16 @@ public class PolygonElement extends DrawElement{
      * @param pos new position.
      */
     public void moveControlPoint(int control, Point2D pos) {
-        if (control == 0)  // top vertex
-            vertexA = pos;
-        else if (control == 1) // bottom left vertex
-            vertexB = pos;
-        else if (control == 2) { // bottom right vertex
-            vertexC = pos;
-        }
+       coordinates.set(control,pos);
     }
 
 
     public void storeElement(StoreFacade sf) {
-        sf.start("PolygonElement");
-        sf.addPoint("PointA", vertexA);
-        sf.addPoint("PointB", vertexB);
-        sf.addPoint("PointC", vertexC);
+        sf.start("DrawElements.PolygonElement");
+        for(Point2D p : coordinates) {
+            sf.addPoint(p.toString(), p);
+
+        }
     }
 
 
@@ -91,11 +78,8 @@ public class PolygonElement extends DrawElement{
     }
 
     public static DrawElement loadElement(LoadFacade lf) {
-        ArrayList<Point2D> triangleVertices = new ArrayList<>();
-        triangleVertices.add(lf.getPoint("top"));
-        triangleVertices.add(lf.getPoint("bottomleft"));
-        triangleVertices.add(lf.getPoint("bottomright"));
-        return new TriElement(triangleVertices);
+        ArrayList<Point2D> PolygonVertices = new ArrayList<>();
+        return new PolygonElement(PolygonVertices);
     }
 }
 

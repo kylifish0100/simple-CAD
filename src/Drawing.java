@@ -1,3 +1,7 @@
+import DrawElements.DrawElement;
+import Facade.LoadFacade;
+import Facade.StoreFacade;
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -12,7 +16,7 @@ import java.util.ArrayList;
 public class Drawing extends ArrayList<DrawElement> {
 	private static final long serialVersionUID = 1L;
 	private static final String DRAWING = "Drawing";
-	private static final int CONTROLPOINTRADIUS = 5;
+	private static final int CONTROLPOINTRADIUS = 8;
 
 	DrawElementFactory drawElementFactory;
 
@@ -28,8 +32,8 @@ public class Drawing extends ArrayList<DrawElement> {
 		for (DrawElement d : this) d.draw(g);
 	}
 
-	public void fill(ArrayList<DrawElement> someElement, Graphics2D g) {
-		for (DrawElement d :someElement) d.Fill(g);
+	public void fill(Graphics2D g) {
+		for (DrawElement d :this) d.Fill(g);
 	}
 
 	public ElementControlPoint findControl(Point point) {

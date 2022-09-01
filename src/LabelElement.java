@@ -1,10 +1,14 @@
-import javax.swing.*;
+import DrawElements.DrawElement;
+import Facade.PUtil;
+import Facade.LoadFacade;
+import Facade.StoreFacade;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class LabelElement extends DrawElement{
+public class LabelElement extends DrawElement {
 
     String text;
     Point2D topLeft, bottomRight;

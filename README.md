@@ -12,8 +12,8 @@ Enjoy.
 
 This is an individual assignment, except for the list below this assignment has been entirely done by myself.
 
-**[put your name here as a signature]**
+**[Yuhan Zhang]**
  
 Below is the complete list of ideas, help, and source code I obtained form others in completing this assignment:
-+ Eric McCreath (who wrote the starting point CAD code),  used with permission. https://gitlab.cecs.anu.edu.au/u4033585/cgcadassignment2020  **[delete this if you don't use our template code at all]** 
-+ **[add others here...]**
++ Eric McCreath (who wrote the starting point CAD code),  used with permission. https://gitlab.cecs.anu.edu.au/u4033585/cgcadassignment2020 
++ Refernece for the zoom transformation https://stackoverflow.com/questions/30792089/java-graphics2d-translate-and-scale

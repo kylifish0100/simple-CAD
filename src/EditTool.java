@@ -1,3 +1,5 @@
+import DrawElements.DrawElement;
+
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -15,16 +17,35 @@ public class EditTool {
         this.pts = new ArrayList<Point2D>();
     }
 
-    public void MarkPoints(ArrayList<Point2D> pts) {
+    public void MarkPointsForFill(MyCAD drawGUI) {
+        for (DrawElement de : drawGUI.drawing) {
+            for (Point2D p : de.controlPoints()) {
+                pen.setColor(Color.BLACK);
+                pen.draw(new Ellipse2D.Double(p.getX() - 2.0, p.getY() - 2.0, 4.0, 4.0));
+            }
+        }
+    }
+
+    public void MarkPointsForEdit(ArrayList<Point2D> pts) {
         for (Point2D p : pts) {
+            pen.setColor(Color.BLACK);
             pen.draw(new Ellipse2D.Double(p.getX() - 2.0, p.getY() - 2.0, 4.0, 4.0));
+            pen.setColor(Color.BLUE);
+            pen.fill(new Ellipse2D.Double(p.getX() - 2.0, p.getY() - 2.0, 4.0, 4.0));
+        }
+    }
+
+    public void MarkPtsWhileDraw(ArrayList<Point2D> pts) {
+        for (Point2D p : pts) {
+            pen.setColor(Color.RED);
+            pen.draw(new Ellipse2D.Double(p.getX() - 3.0, p.getY() - 3.0, 6.0, 6.0));
+            pen.fill(new Ellipse2D.Double(p.getX() - 3.0, p.getY() - 3.0, 6.0, 6.0));
         }
     }
 
     public void GetAllPoints(MyCAD drawGUI) {
         for (DrawElement de : drawGUI.drawing) {
-            System.out.println(de.getClass());
-            MarkPoints(de.controlPoints());
+            MarkPointsForEdit(de.controlPoints());
         }
     }
     public void GetSomePoints(DrawElement de) {

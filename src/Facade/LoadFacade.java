@@ -1,3 +1,5 @@
+package Facade;
+
 import java.awt.geom.Point2D;
 import java.io.File;
 
@@ -9,7 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * LoadFacade - This provides a facade into the standard XML API for loading
+ * Facade.LoadFacade - This provides a facade into the standard XML API for loading
  * drawings.
  * 
  * @author Eric McCreath

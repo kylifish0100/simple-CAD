@@ -1,8 +1,9 @@
+package DrawElements;
+
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import Facade.*;
 
 /**
  * TriangleElement - represents a triangle defined by three points
@@ -17,7 +18,7 @@ public class TriElement extends DrawElement {
 
 	/**
 	 * Construct a triangle.
-	 * @param vertexA, vertexB and vertexC represents three vertices of a triangle.
+	 * vertexA, vertexB and vertexC represents three vertices of a triangle.
 	 */
 	public TriElement(ArrayList<Point2D> coordinates) {
 		this.vertexA = coordinates.get(0);

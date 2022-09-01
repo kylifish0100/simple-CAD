@@ -1,3 +1,5 @@
+package Facade;
+
 import java.awt.geom.Point2D;
 import java.io.File;
 
@@ -13,7 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 /**
- * StoreFacade - This provides a facade into the standard XML API for saving drawings.
+ * Facade.StoreFacade - This provides a facade into the standard XML API for saving drawings.
  * 
  * @author Eric McCreath
  *

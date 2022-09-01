@@ -1,10 +1,16 @@
+package DrawElements;
+
+import Facade.LoadFacade;
+import Facade.PUtil;
+import Facade.StoreFacade;
+
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * BoxElement - represents a simple rectangle defined by two points.
+ * DrawElements.BoxElement - represents a simple rectangle defined by two points.
  * 
  * @author Eric McCreath
  * edited by Matthew Aitichson
@@ -83,7 +89,7 @@ public class BoxElement extends DrawElement {
 
 	@Override
 	public void storeElement(StoreFacade sf) {
-		sf.start("BoxElement");
+		sf.start("DrawElements.BoxElement");
 		sf.addPoint("topleft", topLeft);
 		sf.addPoint("bottomright", bottomRight);
 	}

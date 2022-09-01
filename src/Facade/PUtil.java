@@ -1,7 +1,9 @@
+package Facade;
+
 import java.awt.geom.Point2D;
 
 /**
- * PUtil - a utility class for calculations on points
+ * Facade.PUtil - a utility class for calculations on points
  * Eric McCreath 2020
  */
 public class PUtil {

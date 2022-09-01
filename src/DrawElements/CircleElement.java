@@ -1,10 +1,13 @@
+package DrawElements;
+
+import Facade.*;
+
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * CircleElement - represents a oval defined by 2 radius
+ * DrawElements.CircleElement - represents a oval defined by 2 radius
  * 
  * @author Eric McCreath
  * edited by Yuhan Zhang
@@ -85,7 +88,7 @@ public class CircleElement extends DrawElement {
 
 	@Override
 	public void storeElement(StoreFacade sf) {
-		sf.start("CircleElement");
+		sf.start("DrawElements.CircleElement");
 		sf.addPoint("topleft", topLeft);
 		sf.addPoint("bottomright", bottomRight);
 	}

@@ -1,3 +1,6 @@
+import DrawElements.DrawElement;
+import Facade.StoreFacade;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 /**
@@ -32,10 +35,8 @@ public class ColorDrawElement extends DrawElementDecorator {
 
 	@Override
 	public void Fill(Graphics2D g) {
-		Color oldcolor = g.getColor();
 		g.setColor(color);
 		drawElement.Fill(g);
-		g.setColor(oldcolor);
 	}
 
 	@Override
