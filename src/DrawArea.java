@@ -5,10 +5,6 @@ import transformation.ZoomTransform;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-<<<<<<< HEAD
-=======
-import java.awt.geom.Ellipse2D;
->>>>>>> ee9d60fa75564e957551e172475cc8fd8c0fb49d
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -28,16 +24,11 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	ElementControlPoint currentControl;
 	DrawElementFactory drawAreaFactory;
 	ArrayList<DrawElement> sElementList = new ArrayList<>();
-<<<<<<< HEAD
 	ArrayList<Point2D> PtsInDrawing = new ArrayList<>();
 	Point2D zoomOrigin;
 	private double zoom = 2.0;
 	private CopyPaste cp = null;
 	private DrawElement copyElement = null;
-=======
-	ArrayList<DrawElement> tBFElement = new ArrayList<>();
-	private double zoom = 1d;
->>>>>>> ee9d60fa75564e957551e172475cc8fd8c0fb49d
 
 
 	/**
@@ -73,7 +64,6 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 			ZoomTransform zoom = new ZoomTransform(g,this.zoom,zoomOrigin);
 		}
 
-		ZoomTransform zoom = new ZoomTransform(g,getWidth(),getHeight(),this.zoom);
 		g.setColor(Color.black);
 		drawGUI.drawing.draw(g2);
 		drawGUI.elementToFill.fill(g2);
@@ -294,7 +284,6 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		repaint();
 	}
 
-<<<<<<< HEAD
 	/** Implement zoom function
 	 *  Adapted from https://stackoverflow.com/questions/30792089/java-graphics2d-translate-and-scale
 	 * @param e the event to be processed
@@ -305,25 +294,12 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 			zoom -= 0.05;
 		} else {
 			zoom += 0.05;
-=======
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		if(e.getPreciseWheelRotation()<0){
-			System.out.println("Wheel Movement");
-			zoom -= 0.1;
-		} else {
-			System.out.println("Wheel Movement");
-			zoom += 0.1;
->>>>>>> ee9d60fa75564e957551e172475cc8fd8c0fb49d
 		}
 		if(zoom<0.01){
 			zoom = 0.01;
 		}
 		repaint();
 	}
-<<<<<<< HEAD
 
 
-=======
->>>>>>> ee9d60fa75564e957551e172475cc8fd8c0fb49d
 }
