@@ -1,7 +1,6 @@
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import javax.swing.*;
  * Edited by Matthew Aitchison
  */
 
-public class DrawArea extends JComponent implements MouseMotionListener, MouseListener, ToolChangeObserver {
+public class DrawArea extends JComponent implements MouseMotionListener, MouseListener, MouseWheelListener, ToolChangeObserver {
 
 	private static final long serialVersionUID = 1L;
 	ArrayList<Point2D> coordinates = new ArrayList<>();
@@ -25,6 +24,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	DrawElementFactory drawAreaFactory;
 	ArrayList<DrawElement> sElementList = new ArrayList<>();
 	ArrayList<DrawElement> tBFElement = new ArrayList<>();
+	private double zoom = 1d;
 
 
 	/**
@@ -39,6 +39,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		this.setPreferredSize(new Dimension(700, 500));
 		this.addMouseMotionListener(this);
 		this.addMouseListener(this);
+		this.addMouseWheelListener(this);
 		drawGUI.drawtool.addChangeObserver(this);
 	}
 
@@ -52,6 +53,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
+		ZoomTransform zoom = new ZoomTransform(g,getWidth(),getHeight(),this.zoom);
 		g.setColor(Color.black);
 		drawGUI.drawing.draw(g2);
 		drawGUI.drawing.fill(tBFElement,g2);
@@ -222,6 +224,21 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 	@Override
 	public void update() {
+		repaint();
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(e.getPreciseWheelRotation()<0){
+			System.out.println("Wheel Movement");
+			zoom -= 0.1;
+		} else {
+			System.out.println("Wheel Movement");
+			zoom += 0.1;
+		}
+		if(zoom<0.01){
+			zoom = 0.01;
+		}
 		repaint();
 	}
 }
