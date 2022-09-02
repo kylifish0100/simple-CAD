@@ -15,7 +15,7 @@ public class ZoomTransform {
 
         AffineTransform at = new AffineTransform();
 
-        at.translate((2-zoom)*origin.getX(),(2-zoom)*origin.getY());
+        at.translate((1-zoom)*origin.getX(),(1-zoom)*origin.getY());   //here the 1 is for Linux
         at.scale(zoom,zoom);
 
 

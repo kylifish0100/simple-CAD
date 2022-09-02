@@ -27,7 +27,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	ArrayList<DrawElement> labelList = new ArrayList<>();
 	ArrayList<Point2D> PtsInDrawing = new ArrayList<>();
 	Point2D zoomOrigin;
-	private double zoom = 2.0;
+	private double zoom = 1.0;  // original zoom scaler is 2 on Mac but 1 on Linux ..
 	private CopyPaste cp = null;
 	private DrawElement copyElement = null;
 	String labelText = new String();
@@ -121,7 +121,7 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	public void ClearAll(){
 		sElementList = new ArrayList<>();
 		labelList = new ArrayList<>();
-		zoom = 2.0;
+		zoom = 1.0;
 	}
 	@Override
 	public void mouseDragged(MouseEvent me) {
