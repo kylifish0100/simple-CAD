@@ -1,3 +1,5 @@
+import DrawElements.DrawElement;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -22,6 +24,7 @@ public class MyCAD implements Runnable, ActionListener {
 	private static final String OPENCOMMAND = "opencommand";
 	private static final String INPUT = "labelinput";
 	private static final String CHOOSECOLOR = "choosecolor";
+	private static final String GETMEASURE = "getmeasure";
 
 	private String textStored;
 	JFrame jframe;
@@ -31,7 +34,8 @@ public class MyCAD implements Runnable, ActionListener {
 	Drawing drawing,elementToFill;
 	ToolBar drawtool;
 	ColorChooser ccButton;
-	Color selectedColor;
+	Color selectedColor = Color.BLACK;
+	DrawElement m_display;
 
 	JFileChooser filechooser = new JFileChooser();
 
@@ -116,6 +120,11 @@ public class MyCAD implements Runnable, ActionListener {
 		label_input.addActionListener(this);
 		actionarea.add(label_input);
 
+		JButton get_measure = new JButton("Get Measurement");
+		get_measure.setActionCommand(GETMEASURE);
+		get_measure.addActionListener(this);
+		actionarea.add(get_measure);
+
 		JScrollPane drawpane = new JScrollPane(drawArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		drawpane.setPreferredSize(new Dimension(600, 600));
@@ -163,21 +172,26 @@ public class MyCAD implements Runnable, ActionListener {
 				drawArea.repaint();
 			}
 		} else if (ae.getActionCommand().equals(INPUT)) {
+			textStored = new String();
 			InputWindow labelInput = new InputWindow(this);
 			labelInput.changeVisible();
 		} else if(ae.getActionCommand().equals(CHOOSECOLOR)){
 			Color newColor = JColorChooser.showDialog(null, "Choose a color", ccButton.getCurrent() );
 			ccButton.getSelectedColor(newColor);
 			selectedColor = newColor;
+		} else if(ae.getActionCommand().equals(GETMEASURE)){
+			MeasurementDisplay window = new MeasurementDisplay(this);
+			window.display(this.m_display);
 		}
 
 	}
 	public void getInputText(String text){
 		this.textStored=text;
-		System.out.println(textStored);
+		//System.out.println(textStored+"in MyCAD");
 	}
 
 	public String getTextStored(){
+		//System.out.println("Get Stored Text"+this.textStored);
 		return this.textStored;
 	}
 

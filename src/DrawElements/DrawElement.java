@@ -5,6 +5,7 @@ import Facade.*;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * DrawElements.DrawElement - all elements that make up the drawing will extend this abstract class.
@@ -21,6 +22,7 @@ public abstract class DrawElement
      abstract public void Fill(Graphics2D g);
 
      abstract public ArrayList<Point2D> controlPoints();
+     abstract public Map<String,Double> getMeasurement();
 
      /**
       * Move a control point
@@ -34,4 +36,5 @@ public abstract class DrawElement
       */
      abstract public void storeElement(StoreFacade sf);
      abstract public void addLabelText(String text);
+     abstract public String getLabelText();
 }

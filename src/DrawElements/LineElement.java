@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DrawElements.LineElement - represents a simple line with a start and end point.
@@ -17,10 +19,16 @@ public class LineElement extends DrawElement {
 
 	private static final String LINE_ELEMENT = "DrawElements.LineElement";
 	Point2D start, end;
+	double length;
+	private Map<String, Double> measurement;
 
 	public LineElement(Point2D s, Point2D e) {
 		start = s;
 		end = e;
+		this.measurement = new HashMap<>();
+		this.length = Math.hypot(s.getX()-e.getX(), s.getY()-e.getY());
+
+		measurement.put("length", length);
 	}
 
 	public void draw(Graphics2D g) {
@@ -39,6 +47,11 @@ public class LineElement extends DrawElement {
 		controlpoints.add(end);
 		controlpoints.add(PUtil.mid(start, end));
 		return controlpoints;
+	}
+
+	@Override
+	public Map<String, Double> getMeasurement() {
+		return measurement;
 	}
 
 	public void moveControlPoint(int control, Point2D pos) {
@@ -71,6 +84,11 @@ public class LineElement extends DrawElement {
 	@Override
 	public void addLabelText(String text) {
 
+	}
+
+	@Override
+	public String getLabelText() {
+		return null;
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

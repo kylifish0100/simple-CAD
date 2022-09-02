@@ -1,4 +1,5 @@
-import DrawElements.DrawElement;
+package DrawElements;
+
 import Facade.PUtil;
 import Facade.LoadFacade;
 import Facade.StoreFacade;
@@ -7,12 +8,12 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class LabelElement extends DrawElement {
 
     String text;
     Point2D topLeft, bottomRight;
-    MyCAD drawGUI;
 
     public LabelElement(Point2D topLeft, Point2D bottomRight){
         this.topLeft = topLeft;
@@ -47,6 +48,11 @@ public class LabelElement extends DrawElement {
         return controlpoints;
     }
 
+    @Override
+    public Map<String, Double> getMeasurement() {
+        return null;
+    }
+
     public void moveControlPoint(int control, Point2D pos) {
         if (control == 0)  // topleft
             topLeft = pos;
@@ -67,7 +73,7 @@ public class LabelElement extends DrawElement {
 
     @Override
     public void storeElement(StoreFacade sf) {
-        sf.start("LabelElement");
+        sf.start("DrawElements.LabelElement");
         sf.addPoint("topleft", topLeft);
         sf.addPoint("bottomright", bottomRight);
         //sf.addText(text);
@@ -76,10 +82,10 @@ public class LabelElement extends DrawElement {
     @Override
     public void addLabelText(String text) {
         this.text = text;
-        System.out.println(text);
+        System.out.println("Text Stored in Label: "+text);
     }
 
-    public String getLabelText(String text) {
+    public String getLabelText() {
         return this.text;
     }
 

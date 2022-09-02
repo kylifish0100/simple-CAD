@@ -39,7 +39,7 @@ public class PopUpMenu extends JPopupMenu implements ActionListener {
 
         JMenuItem item6 = new JMenuItem("Delete");
         item6.addActionListener(realLis);
-        item6.setActionCommand("cancel");
+        item6.setActionCommand("delete");
         this.add(item6);
 
 

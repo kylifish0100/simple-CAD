@@ -10,7 +10,7 @@ public class InputWindow extends JFrame implements ActionListener {
     private String text1;
     public InputWindow(MyCAD Obj){
         this.GUIObj = Obj;
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
         button = new JButton("Done");
         button.addActionListener(this);

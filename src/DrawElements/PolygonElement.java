@@ -3,6 +3,8 @@ package DrawElements;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Map;
+
 import Facade.*;
 
 public class PolygonElement extends DrawElement {
@@ -10,6 +12,7 @@ public class PolygonElement extends DrawElement {
     Polygon p;
 
     ArrayList<Point2D> coordinates;
+    private Map<String, Double> measurement;
 
     /**
      * Construct a Polygons with up to 50 sides.
@@ -54,6 +57,11 @@ public class PolygonElement extends DrawElement {
         return controlpoints;
     }
 
+    @Override
+    public Map<String, Double> getMeasurement() {
+        return null;
+    }
+
     /**
      * Process moving of a control point.
      * @param control index to control point
@@ -75,6 +83,11 @@ public class PolygonElement extends DrawElement {
 
     public void addLabelText(String text) {
 
+    }
+
+    @Override
+    public String getLabelText() {
+        return null;
     }
 
     public static DrawElement loadElement(LoadFacade lf) {

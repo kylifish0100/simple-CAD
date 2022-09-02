@@ -4,11 +4,13 @@ import Facade.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CurveElement extends DrawElement {
 
     ArrayList<Point2D> coordinates;
     Integer verticesCount;
+    private Map<String, Double> measurement;
     public CurveElement(ArrayList<Point2D> c){
         this.coordinates = c;
         this.verticesCount = c.size();
@@ -46,6 +48,11 @@ public class CurveElement extends DrawElement {
     }
 
     @Override
+    public Map<String, Double> getMeasurement() {
+        return null;
+    }
+
+    @Override
     public void moveControlPoint(int control, Point2D pos) {
         coordinates.set(control,pos);
     }
@@ -58,5 +65,10 @@ public class CurveElement extends DrawElement {
     @Override
     public void addLabelText(String text) {
 
+    }
+
+    @Override
+    public String getLabelText() {
+        return null;
     }
 }

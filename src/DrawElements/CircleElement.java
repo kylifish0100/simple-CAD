@@ -5,6 +5,8 @@ import Facade.*;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DrawElements.CircleElement - represents a oval defined by 2 radius
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 public class CircleElement extends DrawElement {
 
 	Point2D topLeft, bottomRight;
-
+	private Map<String, Double> measurement;
 	/**
 	 * Construct a box element.
 	 * @param topLeft top left point
@@ -25,6 +27,8 @@ public class CircleElement extends DrawElement {
 	public CircleElement(Point2D topLeft, Point2D bottomRight) {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;
+		this.measurement = new HashMap<>();
+
 	}
 
 	/**
@@ -60,7 +64,17 @@ public class CircleElement extends DrawElement {
 		controlpoints.add(new Point2D.Double(topLeft.getX(), bottomRight.getY()));
 		controlpoints.add(new Point2D.Double(bottomRight.getX(), topLeft.getY()));
 		controlpoints.add(PUtil.mid(topLeft, bottomRight));
+		double radius_a = Math.abs(topLeft.getX()-bottomRight.getX())/2;
+		double radius_b = Math.abs(topLeft.getY()-bottomRight.getY())/2;
+
+		measurement.put("radius_a", radius_a);
+		measurement.put("radius_b", radius_b);
 		return controlpoints;
+	}
+
+	@Override
+	public Map<String, Double> getMeasurement() {
+		return this.measurement;
 	}
 
 	/**
@@ -96,6 +110,11 @@ public class CircleElement extends DrawElement {
 	@Override
 	public void addLabelText(String text) {
 
+	}
+
+	@Override
+	public String getLabelText() {
+		return null;
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

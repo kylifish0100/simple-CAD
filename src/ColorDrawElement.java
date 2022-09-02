@@ -3,6 +3,8 @@ import Facade.StoreFacade;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Map;
+
 /**
  * ColorDrawElement  - gives us a way of adding color to elements.
  * Works by wrapping draw call and modifying g.setColor
@@ -14,6 +16,7 @@ import java.awt.Graphics2D;
 public class ColorDrawElement extends DrawElementDecorator {
 
 	Color color;
+	private Map<String, Double> measurement;
 
 	/**
 	 * Construct our ColorDrawElement.
@@ -23,6 +26,8 @@ public class ColorDrawElement extends DrawElementDecorator {
 	public ColorDrawElement(DrawElement drawElement, Color color) {
 		this.drawElement = drawElement;
 		this.color = color;
+		this.measurement = drawElement.getMeasurement();
+
 	}
 	
 	@Override
@@ -40,6 +45,11 @@ public class ColorDrawElement extends DrawElementDecorator {
 	}
 
 	@Override
+	public Map<String, Double> getMeasurement() {
+		return measurement;
+	}
+
+	@Override
 	public void storeElement(StoreFacade sf) {
 		drawElement.storeElement(sf);
 		sf.addInteger("color",color.getRGB());
@@ -47,7 +57,12 @@ public class ColorDrawElement extends DrawElementDecorator {
 
 	@Override
 	public void addLabelText(String text) {
+		drawElement.addLabelText(text);
+	}
 
+	@Override
+	public String getLabelText() {
+		return this.drawElement.getLabelText();
 	}
 
 	@Override

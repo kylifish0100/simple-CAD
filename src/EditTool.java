@@ -1,4 +1,5 @@
 import DrawElements.DrawElement;
+import DrawElements.LabelElement;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -56,8 +57,11 @@ public class EditTool {
 
     public void ColorSelectedControlPts(ArrayList<DrawElement> eleList){
         pen.setColor(Color.RED);
-        if(eleList == null) return;
-        for(DrawElement e : eleList) {
+        if(eleList.size() == 0)
+            return;
+        for (DrawElement e : eleList) {
+            if(e == null)
+                return;
             for (Point2D p : e.controlPoints()) {
                 pen.fill(new Ellipse2D.Double(p.getX() - 2.0, p.getY() - 2.0, 4.0, 4.0));
             }
@@ -65,6 +69,6 @@ public class EditTool {
     }
 
     public void AddLabelText(String text, LabelElement label){
-        label.getLabelText(text);
+        label.addLabelText(text);
     }
 }

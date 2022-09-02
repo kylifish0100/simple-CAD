@@ -3,6 +3,9 @@ package DrawElements;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import Facade.*;
 
 /**
@@ -15,6 +18,7 @@ import Facade.*;
 public class TriElement extends DrawElement {
 
 	Point2D vertexA, vertexB, vertexC;
+	private Map<String, Double> measurement = new HashMap<>();
 
 	/**
 	 * Construct a triangle.
@@ -24,6 +28,14 @@ public class TriElement extends DrawElement {
 		this.vertexA = coordinates.get(0);
 		this.vertexB = coordinates.get(1);
 		this.vertexC = coordinates.get(2);
+
+		double line1 = Math.hypot(vertexA.getX()-vertexB.getX(), vertexA.getY()-vertexB.getY());
+		double line2 = Math.hypot(vertexA.getX()-vertexC.getX(), vertexA.getY()-vertexC.getY());
+		double line3 = Math.hypot(vertexB.getX()-vertexC.getX(), vertexB.getY()-vertexC.getY());
+
+		measurement.put("line1", line1);
+		measurement.put("line2", line2);
+		measurement.put("line3", line3);
 	}
 
 	/**
@@ -66,6 +78,11 @@ public class TriElement extends DrawElement {
 		return controlpoints;
 	}
 
+	@Override
+	public Map<String, Double> getMeasurement() {
+		return measurement;
+	}
+
 	/**
 	 * Process moving of a control point.
 	 * @param control index to control point
@@ -92,6 +109,11 @@ public class TriElement extends DrawElement {
 	@Override
 	public void addLabelText(String text) {
 
+	}
+
+	@Override
+	public String getLabelText() {
+		return null;
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

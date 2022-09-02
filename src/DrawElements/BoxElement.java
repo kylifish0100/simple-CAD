@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DrawElements.BoxElement - represents a simple rectangle defined by two points.
@@ -20,7 +22,7 @@ public class BoxElement extends DrawElement {
 
 	Point2D topLeft, bottomRight;
 	Double width, height;
-
+	private Map<String, Double> measurement;
 	/**
 	 * Construct a box element.
 	 * @param topLeft top left point
@@ -29,8 +31,7 @@ public class BoxElement extends DrawElement {
 	public BoxElement(Point2D topLeft, Point2D bottomRight) {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;
-		width = Math.abs(topLeft.getX()-bottomRight.getX());
-		height = Math.abs(topLeft.getY()-bottomRight.getY());
+		this.measurement = new HashMap<>();
 	}
 
 	/**
@@ -61,7 +62,19 @@ public class BoxElement extends DrawElement {
 		controlpoints.add(new Point2D.Double(topLeft.getX(), bottomRight.getY()));
 		controlpoints.add(new Point2D.Double(bottomRight.getX(), topLeft.getY()));
 		controlpoints.add(PUtil.mid(topLeft, bottomRight));
+
+		width = Math.abs(topLeft.getX()-bottomRight.getX());
+		height = Math.abs(topLeft.getY()-bottomRight.getY());
+
+		measurement.put("width", width);
+		measurement.put("height",height);
 		return controlpoints;
+	}
+
+
+	@Override
+	public Map<String,Double> getMeasurement() {
+		return this.measurement;
 	}
 
 	/**
@@ -97,6 +110,11 @@ public class BoxElement extends DrawElement {
 	@Override
 	public void addLabelText(String text) {
 
+	}
+
+	@Override
+	public String getLabelText() {
+		return null;
 	}
 
 	public static DrawElement loadElement(LoadFacade lf) {

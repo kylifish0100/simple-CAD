@@ -24,11 +24,13 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	ElementControlPoint currentControl;
 	DrawElementFactory drawAreaFactory;
 	ArrayList<DrawElement> sElementList = new ArrayList<>();
+	ArrayList<DrawElement> labelList = new ArrayList<>();
 	ArrayList<Point2D> PtsInDrawing = new ArrayList<>();
 	Point2D zoomOrigin;
 	private double zoom = 2.0;
 	private CopyPaste cp = null;
 	private DrawElement copyElement = null;
+	String labelText = new String();
 
 
 	/**
@@ -60,6 +62,10 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		g.fillRect(0, 0, getWidth(), getHeight());
 		AffineTransform saveTr = g2.getTransform();
 
+		labelText = drawGUI.getTextStored();
+		drawGUI.getInputText(null);
+
+
 		if(zoomOrigin!=null&&command.equals("Zoom")){
 			ZoomTransform zoom = new ZoomTransform(g,this.zoom,zoomOrigin);
 		}
@@ -67,6 +73,18 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		g.setColor(Color.black);
 		drawGUI.drawing.draw(g2);
 		drawGUI.elementToFill.fill(g2);
+
+		for(DrawElement de: labelList) {
+			if(de == null)
+				break;
+			if (de.getLabelText() != null) {
+				Font labelFont = new Font("Lucida", Font.PLAIN, 10);
+				FontMetrics metrics = g.getFontMetrics(labelFont);
+				g2.setColor(Color.BLACK);
+				g2.drawString(de.getLabelText(), (int) de.controlPoints().get(0).getX(),
+						(int) de.controlPoints().get(0).getY() + metrics.getHeight());
+			}
+		}
 
 		if(cp!=null && copyElement!=null){
 			cp.DrawPasted(g,copyElement);
@@ -83,35 +101,26 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 			editTool.MarkPointsForFill(drawGUI);
 		}
 		if (command.equals(MyCAD.EDITTOOL)) {
-			String labelText = new String();
 			EditTool editTool = new EditTool(g2);
 			editTool.GetAllPoints(drawGUI);
 			if(sElementList != null){
 				editTool.ColorSelectedControlPts(sElementList);
 			}
-			labelText = drawGUI.getTextStored();
-			if(sElementList == null){
-				sElementList = new ArrayList<>();
+			if(labelList == null){
+				labelList = new ArrayList<>();
 			}
-			for(DrawElement de : sElementList){
-				de.addLabelText(labelText);
-				if(labelText!=null) {
-					Font labelFont = new Font("Lucida", Font.PLAIN, 10);
-					FontMetrics metrics = g.getFontMetrics(labelFont);
-					g2.drawString(labelText, (int) de.controlPoints().get(0).getX(),
-							(int) de.controlPoints().get(0).getY()+metrics.getHeight());
+			for(DrawElement de : labelList){
+				if(de.getLabelText()==null) {
+					System.out.println("Text to add " + labelText);
+					de.addLabelText(labelText);
 				}
+
 			}
 		}
-//			for (DrawElements.DrawElement de : drawGUI.drawing) {
-//				ArrayList<Point2D> pts = de.controlPoints();
-//				for (Point2D p : pts) {
-//					g2.draw(new Ellipse2D.Double(p.getX() - 2.0, p.getY() - 2.0, 4.0, 4.0));
-//				}
-//		}
 	}
 	public void ClearAll(){
 		sElementList = new ArrayList<>();
+		labelList = new ArrayList<>();
 		zoom = 2.0;
 	}
 	@Override
@@ -137,11 +146,9 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		if(command.equals(BasicDrawElementFactory.FILLTOOL)){
 			if(SwingUtilities.isRightMouseButton(me)){
 				DrawElement selectedElement = drawGUI.drawing.findElement(me.getPoint());
-				System.out.println("selectedElement " + selectedElement);
 				PopUpMenu menu = new PopUpMenu(e -> {
-					System.out.println(e.getActionCommand());
 					if (e.getActionCommand().equals("fillcolor")  && selectedElement!=null ) {
-						System.out.println("filling");
+						//System.out.println("filling");
 						DrawElement coloredEle = drawAreaFactory.fillElementWithColor(drawGUI.selectedColor,selectedElement);
 						drawGUI.elementToFill.add(coloredEle);
 						repaint();
@@ -155,17 +162,33 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		if (command.equals(MyCAD.EDITTOOL)){
 			if(SwingUtilities.isLeftMouseButton(me)) {
 				DrawElement selectedElement = drawGUI.drawing.findElement(me.getPoint());
+				drawGUI.m_display = selectedElement;
 				if (sElementList == null) {
 					sElementList = new ArrayList<>();
 				}
+				if (labelList == null) {
+					labelList = new ArrayList<>();
+				}
 				sElementList.add(selectedElement);
+				labelList.add(selectedElement);
 			} else if (SwingUtilities.isRightMouseButton(me)) {
+				DrawElement selectedElement = drawGUI.drawing.findElement(me.getPoint());
 				PopUpMenu menu = new PopUpMenu(e -> {
 					if (e.getActionCommand().equals("cancel")) {
 						System.out.println("cancel");
-						sElementList = new ArrayList<>();
+						if(sElementList.contains(selectedElement)) {
+							sElementList.remove(selectedElement);
+						}
 						repaint();
 					}
+					if (e.getActionCommand().equals("delete")){
+						if(sElementList.contains(selectedElement)) {
+							sElementList.remove(selectedElement);
+						}
+						drawGUI.drawing.remove(selectedElement);
+						repaint();
+					}
+
 				});
 				menu.show(drawGUI.jframe, me.getX(), me.getY());
 
@@ -176,12 +199,12 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		if(command.equals(BasicDrawElementFactory.POLYGONTOOL)){
 			if(SwingUtilities.isLeftMouseButton(me)) {
 				coordinates.add(me.getPoint());
-				System.out.println("Left click add a point");
+				//System.out.println("Left click add a point");
 			}
 			if(SwingUtilities.isRightMouseButton(me)){
 				PopUpMenu menu = new PopUpMenu(e -> {
 					if (e.getActionCommand().equals("OK")) {
-						System.out.println("OK");
+						//System.out.println("OK");
 						DrawElement polygon = drawAreaFactory.createElementFromMouseClicked(command,
 								drawGUI.selectedColor, coordinates);
 						drawGUI.drawing.add(polygon);
@@ -221,6 +244,10 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 			DrawElement labelbox = drawAreaFactory.createEmptyLabel(drawGUI.selectedColor, me.getPoint());
 			drawGUI.drawing.add(labelbox);
 		}
+
+		/**
+		 * bugged Copy Paste Functiom :(
+		 */
 
 //		if (SwingUtilities.isRightMouseButton(me)) {
 //			PopUpMenu menu = new PopUpMenu(e -> {
