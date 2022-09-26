@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CAD">
+    <output-path>$PROJECT_DIR$/out/artifacts/CAD</output-path>
+    <root id="archive" name="CAD.jar">
+      <element id="module-output" name="assign1" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
